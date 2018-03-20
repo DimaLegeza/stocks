@@ -1,0 +1,40 @@
+###
+#   Database Settings
+###
+spring:
+  datasource:
+    url: jdbc:h2:mem:stocks;MODE=PostgreSQL
+    platform: h2
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+
+###
+#   H2 Settings
+###
+  h2:
+    console:
+      enabled: true
+      path: /console
+      settings:
+        trace: false
+        web-allow-others: false
+
+###
+#   Liquibase
+###
+liquibase:
+  enabled: true
+
+app-init:
+  pre-populate: true
+  records: 1000
