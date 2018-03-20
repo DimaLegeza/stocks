@@ -35,7 +35,7 @@ public class StockController {
         @ApiResponse(code = 200, message = "Stock found"),
         @ApiResponse(code = 400, message = "No stock entry was found by id")
     })
-    public Stock getById(final Long id) {
+    public Stock getById(@PathVariable final Long id) {
         return this.stockService.getStockById(id);
     }
 
@@ -65,7 +65,7 @@ public class StockController {
         @ApiResponse(code = 400, message = "No stock entry was found by id"),
         @ApiResponse(code = 500, message = "Internal server error")
     })
-    public ResponseEntity<Stock> update(final Long id, @Valid @RequestBody final Stock stock) {
+    public ResponseEntity<Stock> update(@PathVariable final Long id, @Valid @RequestBody final Stock stock) {
         final Stock updated = this.stockService.update(id, stock);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
