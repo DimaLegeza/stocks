@@ -42,7 +42,7 @@ public class StocksAppInitializer {
 	public void appInit() {
 		Random random = new Random();
 		LOGGER.info("Application initialization invoked with record count: {}", this.recordCount);
-		IntStream.range(0, this.recordCount)
+		IntStream.range(1, this.recordCount)
 			.mapToObj(
 				index -> Stock.builder()
 							.name("Stock" + index)

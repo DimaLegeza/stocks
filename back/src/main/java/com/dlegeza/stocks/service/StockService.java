@@ -57,6 +57,9 @@ public class StockService {
      * @throws {@link StockNotFoundException} if stock was not found
      */
     public Stock update(final Long id, final Stock stock) {
+        if (!this.stockRepository.exists(id)) {
+            throw new StockNotFoundException(id);
+        }
         final Stock stockToBeUpdated = Stock.builder()
             .id(id)
             .name(stock.getName())
@@ -64,9 +67,7 @@ public class StockService {
             .timestamp(stock.getTimestamp())
             .lockVersion(stock.getLockVersion())
             .build();
-        return Optional
-            .ofNullable(this.stockRepository.save(stockToBeUpdated))
-            .orElseThrow(() -> new StockNotFoundException(stock.getId()));
+        return this.stockRepository.save(stockToBeUpdated);
     }
 
 }

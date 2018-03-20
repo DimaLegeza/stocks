@@ -2,6 +2,7 @@
 .idea
 .idea/*
 api.iml
+back.iml
 
 # CMake
 cmake-build-debug/

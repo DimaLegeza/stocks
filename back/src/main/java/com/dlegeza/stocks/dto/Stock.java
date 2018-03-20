@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode
 @ApiModel(
     description = "Representation of stock entity"
 )
