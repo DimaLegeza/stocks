@@ -37,4 +37,4 @@ liquibase:
 
 app-init:
   pre-populate: true
-  records: 1000
+  records: 200

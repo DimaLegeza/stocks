@@ -26,6 +26,20 @@ public class StockController {
         return this.stockService.getStockPage(pageable);
     }
 
+
+    @GetMapping("{id}")
+    @ApiOperation(
+        value = "Get stock by id"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Stock found"),
+        @ApiResponse(code = 400, message = "No stock entry was found by id")
+    })
+    public Stock getById(final Long id) {
+        return this.stockService.getStockById(id);
+    }
+
+
     @PostMapping
     @ApiOperation(
         value = "Creates new stock entity"
@@ -41,6 +55,7 @@ public class StockController {
             .body(persisted);
     }
 
+
     @PutMapping("{id}")
     @ApiOperation(
         value = "Updates new stock entity on basis of provided id"
@@ -51,13 +66,7 @@ public class StockController {
         @ApiResponse(code = 500, message = "Internal server error")
     })
     public ResponseEntity<Stock> update(final Long id, @Valid @RequestBody final Stock stock) {
-        final Stock stockToBeUpdated = Stock.builder()
-                .id(id)
-                .name(stock.getName())
-                .currentPrice(stock.getCurrentPrice())
-                .timestamp(stock.getTimestamp())
-                .build();
-        final Stock updated = this.stockService.update(stockToBeUpdated);
+        final Stock updated = this.stockService.update(id, stock);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .body(updated);

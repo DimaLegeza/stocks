@@ -3,12 +3,14 @@ package com.dlegeza.stocks.service;
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.exceptions.StockNotFoundException;
 import com.dlegeza.stocks.repo.StockRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Service that provides CRUD functionality over stocks {@link Stock}
@@ -16,20 +18,31 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class StockService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StockService.class);
     private final StockRepository stockRepository;
 
     /**
-     *
-     * @param pageable
-     * @return
+     * Gets single page of stocks {@link Stock} from repository
+     * @param pageable - {@link Pageable} entity
+     * @return page of stocks
      */
     public Page<Stock> getStockPage(final Pageable pageable) {
         return this.stockRepository.findAll(pageable);
     }
 
     /**
-     * Persists stock entity to repository
+     * Gets stock entity {@link Stock} fro repository by id
+     * @param stockId - primary key of stock
+     * @return existing stock entity {@link Stock}
+     * @throws {@link StockNotFoundException} if stock was not found
+     */
+    public Stock getStockById(final Long stockId) {
+        return Optional
+            .ofNullable(this.stockRepository.findOne(stockId))
+            .orElseThrow(() -> new StockNotFoundException(stockId));
+    }
+
+    /**
+     * Persists stock entity {@link Stock} to repository
      * @param stock - stock entity {@link Stock} that should be updated
      * @return update stock {@link Stock}
      */
@@ -38,17 +51,22 @@ public class StockService {
     }
 
     /**
-     * Updates stock entity in repository if it exists, otherwise throws {@link StockNotFoundException}
-     * @param stock - stock entity that should be updated
+     * Updates stock entity {@link Stock} in repository if it exists, otherwise throws {@link StockNotFoundException}
+     * @param stock - stock entity {@link Stock} that should be updated
      * @return updated stock entity {@link Stock}
-     * @throws {@link StockNotFoundException} is stock not found
+     * @throws {@link StockNotFoundException} if stock was not found
      */
-    public Stock update(final Stock stock) {
-        if (!this.stockRepository.exists(stock.getId())) {
-            LOGGER.error("Could not find matching stock for update");
-            throw new StockNotFoundException("No matching stock found");
-        }
-        return this.stockRepository.save(stock);
+    public Stock update(final Long id, final Stock stock) {
+        final Stock stockToBeUpdated = Stock.builder()
+            .id(id)
+            .name(stock.getName())
+            .currentPrice(stock.getCurrentPrice())
+            .timestamp(stock.getTimestamp())
+            .lockVersion(stock.getLockVersion())
+            .build();
+        return Optional
+            .ofNullable(this.stockRepository.save(stockToBeUpdated))
+            .orElseThrow(() -> new StockNotFoundException(stock.getId()));
     }
 
 }
