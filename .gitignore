@@ -1,7 +1,7 @@
 ### Intellij ###
 .idea
 .idea/*
-stocks-api.iml
+stocks-backend.iml
 
 
 # CMake
