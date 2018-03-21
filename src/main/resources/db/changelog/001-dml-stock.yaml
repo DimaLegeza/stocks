@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: dlegeza
+    comment: Initial data load
+    changes:
+    - loadUpdateData:
+        tableName: stock
+        file: stocks.csv

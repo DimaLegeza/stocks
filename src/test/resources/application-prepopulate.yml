@@ -1,3 +1,0 @@
-app-init:
-  pre-populate: true
-  records: 100
