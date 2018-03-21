@@ -53,7 +53,7 @@ public class StockControllerTest {
 		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
 
 		ResponseEntity<RestResponsePage<Stock>> stockPage =
-			this.restTemplate.exchange("/api/stocks?page=10&size=10", HttpMethod.GET, null, responseType);
+			this.restTemplate.exchange("/stocks?page=10&size=10", HttpMethod.GET, null, responseType);
 
 		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
 		assertNotNull(stockPage.getBody());
@@ -68,7 +68,7 @@ public class StockControllerTest {
 
 	@Test
 	public void testGetById_Success() {
-		ResponseEntity<Stock> stockEntity = this.restTemplate.getForEntity("/api/stocks/102", Stock.class);
+		ResponseEntity<Stock> stockEntity = this.restTemplate.getForEntity("/stocks/102", Stock.class);
 
 		assertEquals(HttpStatus.OK, stockEntity.getStatusCode());
 		assertNotNull(stockEntity.getBody());
@@ -80,7 +80,7 @@ public class StockControllerTest {
 
 	@Test
 	public void testGetById_Exception() {
-		ResponseEntity<Exception> stockEntity = this.restTemplate.getForEntity("/api/stocks/200", Exception.class);
+		ResponseEntity<Exception> stockEntity = this.restTemplate.getForEntity("/stocks/200", Exception.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, stockEntity.getStatusCode());
 		assertNotNull(stockEntity.getBody());
@@ -91,7 +91,7 @@ public class StockControllerTest {
 	public void testSave_Success() {
 		Stock newStock = Stock.builder().name("BlaStock").currentPrice(new BigDecimal(50)).build();
 
-		ResponseEntity<Stock> persisted = this.restTemplate.postForEntity("/api/stocks", newStock, Stock.class);
+		ResponseEntity<Stock> persisted = this.restTemplate.postForEntity("/stocks", newStock, Stock.class);
 
 		assertEquals(HttpStatus.CREATED, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());
@@ -115,7 +115,7 @@ public class StockControllerTest {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
-		ResponseEntity<Stock> persisted = this.restTemplate.exchange("/api/stocks/101", HttpMethod.PUT, entity, Stock.class);
+		ResponseEntity<Stock> persisted = this.restTemplate.exchange("/stocks/101", HttpMethod.PUT, entity, Stock.class);
 
 		assertEquals(HttpStatus.ACCEPTED, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());
@@ -136,7 +136,7 @@ public class StockControllerTest {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
-		ResponseEntity<Exception> persisted = this.restTemplate.exchange("/api/stocks/104", HttpMethod.PUT, entity, Exception.class);
+		ResponseEntity<Exception> persisted = this.restTemplate.exchange("/stocks/104", HttpMethod.PUT, entity, Exception.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());
@@ -155,7 +155,7 @@ public class StockControllerTest {
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
 		ResponseEntity<Exception> persisted =
-			this.restTemplate.exchange("/api/stocks/102", HttpMethod.PUT, entity, Exception.class);
+			this.restTemplate.exchange("/stocks/102", HttpMethod.PUT, entity, Exception.class);
 
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());

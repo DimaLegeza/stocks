@@ -29,7 +29,7 @@ public class StocksAppInitializerTest {
 		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
 
 		ResponseEntity<RestResponsePage<Stock>> stockPage =
-			this.restTemplate.exchange("/api/stocks?page=0&size=1000", HttpMethod.GET, null, responseType);
+			this.restTemplate.exchange("/stocks?page=0&size=1000", HttpMethod.GET, null, responseType);
 
 		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
 		assertNotNull(stockPage.getBody());
