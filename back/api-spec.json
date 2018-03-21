@@ -22,6 +22,10 @@
       "description": "Basic Error Controller"
     },
     {
+      "name": "health-controller",
+      "description": "Health Controller"
+    },
+    {
       "name": "stock-controller",
       "description": "Stock Controller"
     }
@@ -113,9 +117,9 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "id",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int64"
           }
@@ -156,9 +160,9 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "id",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int64"
           },
@@ -435,6 +439,35 @@
           },
           "403": {
             "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/health-check": {
+      "get": {
+        "tags": [
+          "health-controller"
+        ],
+        "summary": "health",
+        "operationId": "healthUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
