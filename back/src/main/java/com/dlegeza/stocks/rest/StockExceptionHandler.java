@@ -21,7 +21,7 @@ public class StockExceptionHandler {
      */
     @ExceptionHandler(StockNotFoundException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Stock lookup failed")
-    public void stackNotFound(StockNotFoundException ex) {
+    public void stockNotFound(StockNotFoundException ex) {
         LOGGER.error(ex.getMessage());
     }
 
