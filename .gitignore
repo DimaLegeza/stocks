@@ -1,8 +1,8 @@
 ### Intellij ###
 .idea
 .idea/*
-api.iml
-back.iml
+stocks-api.iml
+
 
 # CMake
 cmake-build-debug/

@@ -1,16 +1,9 @@
 package com.dlegeza.stocks.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.helpers.RestResponsePage;
 import com.dlegeza.stocks.repo.StockRepository;
 import com.dlegeza.stocks.service.StockService;
-
-import java.math.BigDecimal;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,12 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.math.BigDecimal;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -60,7 +53,7 @@ public class StockControllerTest {
 		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
 
 		ResponseEntity<RestResponsePage<Stock>> stockPage =
-			this.restTemplate.exchange("/api/stocks?page=0&size=10", HttpMethod.GET, null, responseType);
+			this.restTemplate.exchange("/api/stocks?page=10&size=10", HttpMethod.GET, null, responseType);
 
 		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
 		assertNotNull(stockPage.getBody());
@@ -75,19 +68,19 @@ public class StockControllerTest {
 
 	@Test
 	public void testGetById_Success() {
-		ResponseEntity<Stock> stockEntity = this.restTemplate.getForEntity("/api/stocks/2", Stock.class);
+		ResponseEntity<Stock> stockEntity = this.restTemplate.getForEntity("/api/stocks/102", Stock.class);
 
 		assertEquals(HttpStatus.OK, stockEntity.getStatusCode());
 		assertNotNull(stockEntity.getBody());
 		assertEquals(this.stock2.getName(), stockEntity.getBody().getName());
 		assertTrue(this.bigdecimalEquals(this.stock2.getCurrentPrice(), stockEntity.getBody().getCurrentPrice()));
-		assertTrue(2L == stockEntity.getBody().getId());
+		assertTrue(102L == stockEntity.getBody().getId());
 		assertTrue(0 == stockEntity.getBody().getLockVersion());
 	}
 
 	@Test
 	public void testGetById_Exception() {
-		ResponseEntity<Exception> stockEntity = this.restTemplate.getForEntity("/api/stocks/100", Exception.class);
+		ResponseEntity<Exception> stockEntity = this.restTemplate.getForEntity("/api/stocks/200", Exception.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, stockEntity.getStatusCode());
 		assertNotNull(stockEntity.getBody());
@@ -105,7 +98,7 @@ public class StockControllerTest {
 		assertEquals("BlaStock", persisted.getBody().getName());
 		assertTrue(this.bigdecimalEquals(new BigDecimal(50), persisted.getBody().getCurrentPrice()));
 		assertTrue(0 == persisted.getBody().getLockVersion());
-		assertTrue(3L == persisted.getBody().getId());
+		assertTrue(103L == persisted.getBody().getId());
 
 		//cleanup
 		this.repository.delete(persisted.getBody());
@@ -114,7 +107,7 @@ public class StockControllerTest {
 	@Test
 	public void testUpdate_Success() {
 		Stock newStock = Stock.builder()
-			.id(1L)
+			.id(101L)
 			.name("New Desc for stock")
 			.currentPrice(new BigDecimal(70))
 			.lockVersion(0L)
@@ -122,20 +115,20 @@ public class StockControllerTest {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
-		ResponseEntity<Stock> persisted = this.restTemplate.exchange("/api/stocks/1", HttpMethod.PUT, entity, Stock.class);
+		ResponseEntity<Stock> persisted = this.restTemplate.exchange("/api/stocks/101", HttpMethod.PUT, entity, Stock.class);
 
 		assertEquals(HttpStatus.ACCEPTED, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());
 		assertEquals("New Desc for stock", persisted.getBody().getName());
 		assertTrue(this.bigdecimalEquals(new BigDecimal(70), persisted.getBody().getCurrentPrice()));
 		assertTrue(1 == persisted.getBody().getLockVersion());
-		assertTrue(1L == persisted.getBody().getId());
+		assertTrue(101L == persisted.getBody().getId());
 	}
 
 	@Test
 	public void testUpdate_StockException() {
 		Stock newStock = Stock.builder()
-			.id(4L)
+			.id(104L)
 			.name("New Desc for stock")
 			.currentPrice(new BigDecimal(70))
 			.lockVersion(0L)
@@ -143,7 +136,7 @@ public class StockControllerTest {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
-		ResponseEntity<Exception> persisted = this.restTemplate.exchange("/api/stocks/4", HttpMethod.PUT, entity, Exception.class);
+		ResponseEntity<Exception> persisted = this.restTemplate.exchange("/api/stocks/104", HttpMethod.PUT, entity, Exception.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());
@@ -153,7 +146,7 @@ public class StockControllerTest {
 	@Test
 	public void testUpdate_InternalServerError() {
 		Stock newStock = Stock.builder()
-			.id(2L)
+			.id(102L)
 			.name("New Desc for stock")
 			.currentPrice(new BigDecimal(70))
 			.lockVersion(5L)
@@ -162,7 +155,7 @@ public class StockControllerTest {
 		HttpEntity<Stock> entity = new HttpEntity<>(newStock, headers);
 
 		ResponseEntity<Exception> persisted =
-			this.restTemplate.exchange("/api/stocks/2", HttpMethod.PUT, entity, Exception.class);
+			this.restTemplate.exchange("/api/stocks/102", HttpMethod.PUT, entity, Exception.class);
 
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, persisted.getStatusCode());
 		assertNotNull(persisted.getBody());

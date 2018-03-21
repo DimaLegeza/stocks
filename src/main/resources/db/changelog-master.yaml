@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: changelog/001-ddl-stock.yaml
-      relativeToChangelogFile: true
-
-  - include:
-      file: changelog/001-dml-stock.yaml
-      relativeToChangelogFile: true
-      context: test-data

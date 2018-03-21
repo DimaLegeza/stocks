@@ -34,8 +34,5 @@ spring:
 ###
 liquibase:
   enabled: true
-  change-log: classpath:/db/changelog-master.yaml
-
-app-init:
-  pre-populate: true
-  records: 200
+  change-log: classpath:/db/changelog-master.xml
+  contexts: default, test-data
