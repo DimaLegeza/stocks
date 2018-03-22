@@ -1,25 +1,22 @@
 package com.dlegeza.stocks.service;
 
+import com.dlegeza.stocks.dto.Stock;
+import com.dlegeza.stocks.exceptions.StockNotFoundException;
+import com.dlegeza.stocks.repo.StockRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.dlegeza.stocks.dto.Stock;
-import com.dlegeza.stocks.exceptions.StockNotFoundException;
-import com.dlegeza.stocks.repo.StockRepository;
-
-import java.math.BigDecimal;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import static org.mockito.Mockito.*;
 
 public class StockServiceTest {
 	private StockRepository repo;
@@ -35,12 +32,12 @@ public class StockServiceTest {
 	public void testGetStockPage_Success() {
 		Pageable pageable = mock(Pageable.class);
 		Page<Stock> expectedPage = mock(Page.class);
-		when(this.repo.findAll(eq(pageable))).thenReturn(expectedPage);
+		when(this.repo.findAll(any(Specification.class), eq(pageable))).thenReturn(expectedPage);
 
-		Page<Stock> stockPage = this.stockService.getStockPage(pageable);
+		Page<Stock> stockPage = this.stockService.getStockPage(pageable, "");
 
 		assertEquals(expectedPage, stockPage);
-		verify(this.repo, times(1)).findAll(same(pageable));
+		verify(this.repo, times(1)).findAll(eq(null), same(pageable));
 	}
 
 	@Test
