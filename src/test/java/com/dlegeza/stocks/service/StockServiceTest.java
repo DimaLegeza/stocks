@@ -1,31 +1,41 @@
 package com.dlegeza.stocks.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.exceptions.StockNotFoundException;
 import com.dlegeza.stocks.repo.StockRepository;
+
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.math.BigDecimal;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.*;
-
 public class StockServiceTest {
 	private StockRepository repo;
 	private StockService stockService;
+	private Specification specMock;
 
 	@Before
 	public void setUp() {
 		this.repo = mock(StockRepository.class);
-		this.stockService = new StockService(this.repo);
+		StockSpecificationService specService = mock(StockSpecificationService.class);
+		this.specMock = mock(Specification.class);
+		when(specService.parse(anyString())).thenReturn(this.specMock);
+
+		this.stockService = new StockService(this.repo, specService);
 	}
 
 	@Test
@@ -37,7 +47,7 @@ public class StockServiceTest {
 		Page<Stock> stockPage = this.stockService.getStockPage(pageable, "");
 
 		assertEquals(expectedPage, stockPage);
-		verify(this.repo, times(1)).findAll(eq(null), same(pageable));
+		verify(this.repo, times(1)).findAll(eq(this.specMock), same(pageable));
 	}
 
 	@Test

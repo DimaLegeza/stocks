@@ -1,9 +1,16 @@
 package com.dlegeza.stocks.rest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.helpers.RestResponsePage;
 import com.dlegeza.stocks.repo.StockRepository;
 import com.dlegeza.stocks.service.StockService;
+
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.math.BigDecimal;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -77,6 +84,58 @@ public class StockControllerTest {
 		assertNotNull(stockPage.getBody());
 		assertEquals(1, stockPage.getBody().getNumberOfElements());
 		assertEquals("Stock23", stockPage.getBody().getContent().get(0).getName());
+		assertTrue(0 == stockPage.getBody().getContent().get(0).getLockVersion());
+	}
+
+	@Test
+	public void testGetStocksWithNumericLimitsFullResult_Success() {
+		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
+
+		ResponseEntity<RestResponsePage<Stock>> stockPage =
+			this.restTemplate.exchange("/stocks?q=currentPrice>0&page=0&size=100", HttpMethod.GET, null, responseType);
+
+		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
+		assertNotNull(stockPage.getBody());
+		assertEquals(100, stockPage.getBody().getNumberOfElements());
+		assertEquals("Stock1", stockPage.getBody().getContent().get(0).getName());
+		assertTrue(0 == stockPage.getBody().getContent().get(0).getLockVersion());
+	}
+
+	@Test
+	public void testGetStocksWithNumericLimitsEmptyResultUpperBound_Success() {
+		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
+
+		ResponseEntity<RestResponsePage<Stock>> stockPage =
+			this.restTemplate.exchange("/stocks?q=currentPrice>1000&page=0&size=100", HttpMethod.GET, null, responseType);
+
+		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
+		assertNotNull(stockPage.getBody());
+		assertEquals(0, stockPage.getBody().getNumberOfElements());
+	}
+
+	@Test
+	public void testGetStocksWithNumericLimitsEmptyResultLowerBound_Success() {
+		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
+
+		ResponseEntity<RestResponsePage<Stock>> stockPage =
+			this.restTemplate.exchange("/stocks?q=currentPrice<0&page=0&size=100", HttpMethod.GET, null, responseType);
+
+		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
+		assertNotNull(stockPage.getBody());
+		assertEquals(0, stockPage.getBody().getNumberOfElements());
+	}
+
+	@Test
+	public void testGetStocksWithSort_Success() {
+		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
+
+		ResponseEntity<RestResponsePage<Stock>> stockPage =
+			this.restTemplate.exchange("/stocks?sort=name,desc&page=0&size=100", HttpMethod.GET, null, responseType);
+
+		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
+		assertNotNull(stockPage.getBody());
+		assertEquals(100, stockPage.getBody().getNumberOfElements());
+		assertEquals("Stock99", stockPage.getBody().getContent().get(0).getName());
 		assertTrue(0 == stockPage.getBody().getContent().get(0).getLockVersion());
 	}
 

@@ -3,13 +3,14 @@ package com.dlegeza.stocks.service;
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.exceptions.StockNotFoundException;
 import com.dlegeza.stocks.repo.StockRepository;
-import com.dlegeza.stocks.specification.StockSpecificationBuilder;
-import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Service that provides CRUD functionality over stocks {@link Stock}
@@ -18,14 +19,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StockService {
     private final StockRepository stockRepository;
+    private final StockSpecificationService stockSpecificationBuilder;
 
     /**
      * Gets single page of stocks {@link Stock} from repository
      * @param pageable - {@link Pageable} entity
+     * @param searchQ - generic container for search conditions of following structure: <field><operation><value>
+     *                supported operations:
+     *                  * ":" - translated into equals critera for numeric values; into like criteria for strings
+     *                  * ">" - translated into greater criteria
+     *                  * "<" - translated into smaller criteria
+     *        example searchQ="name:test"
+     *        Supports multiple criterions, separated with comma, e.g.:
+     *                searchQ="name:test,price>400"
      * @return page of stocks
      */
     public Page<Stock> getStockPage(final Pageable pageable, final String searchQ) {
-        return this.stockRepository.findAll(StockSpecificationBuilder.parse(searchQ), pageable);
+        return this.stockRepository.findAll(stockSpecificationBuilder.parse(searchQ), pageable);
     }
 
     /**

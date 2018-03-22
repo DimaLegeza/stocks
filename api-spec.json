@@ -282,6 +282,15 @@
         "produces": [
           "*/*"
         ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "q",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

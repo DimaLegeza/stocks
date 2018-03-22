@@ -1,13 +1,15 @@
 package com.dlegeza.stocks.specification;
 
 import com.dlegeza.stocks.dto.Stock;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StockSpecification implements Specification<Stock> {
