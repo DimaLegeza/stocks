@@ -67,6 +67,20 @@ public class StockControllerTest {
 	}
 
 	@Test
+	public void testGetStocksWithFilter_Success() {
+		ParameterizedTypeReference<RestResponsePage<Stock>> responseType = new ParameterizedTypeReference<RestResponsePage<Stock>>() {};
+
+		ResponseEntity<RestResponsePage<Stock>> stockPage =
+				this.restTemplate.exchange("/stocks?q=name:23&page=0&size=10", HttpMethod.GET, null, responseType);
+
+		assertEquals(HttpStatus.OK, stockPage.getStatusCode());
+		assertNotNull(stockPage.getBody());
+		assertEquals(1, stockPage.getBody().getNumberOfElements());
+		assertEquals("Stock23", stockPage.getBody().getContent().get(0).getName());
+		assertTrue(0 == stockPage.getBody().getContent().get(0).getLockVersion());
+	}
+
+	@Test
 	public void testGetById_Success() {
 		ResponseEntity<Stock> stockEntity = this.restTemplate.getForEntity("/stocks/102", Stock.class);
 

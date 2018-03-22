@@ -24,7 +24,8 @@ public class StockController {
     @ApiOperation(
         value = "Page response to get list of stocks"
     )
-    public Page<Stock> getStocks(final Pageable pageable, @RequestParam(value = "q") String search) {
+    public Page<Stock> getStocks(final Pageable pageable,
+                                 @RequestParam(value = "q", required = false, defaultValue = "") String search) {
         return this.stockService.getStockPage(pageable, search);
     }
 
