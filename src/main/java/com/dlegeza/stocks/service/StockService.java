@@ -3,14 +3,13 @@ package com.dlegeza.stocks.service;
 import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.exceptions.StockNotFoundException;
 import com.dlegeza.stocks.repo.StockRepository;
-
-import java.util.Optional;
-
+import com.dlegeza.stocks.specification.StockSpecificationBuilder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 /**
  * Service that provides CRUD functionality over stocks {@link Stock}
@@ -25,8 +24,8 @@ public class StockService {
      * @param pageable - {@link Pageable} entity
      * @return page of stocks
      */
-    public Page<Stock> getStockPage(final Pageable pageable) {
-        return this.stockRepository.findAll(pageable);
+    public Page<Stock> getStockPage(final Pageable pageable, final String searchQ) {
+        return this.stockRepository.findAll(StockSpecificationBuilder.parse(searchQ), pageable);
     }
 
     /**
