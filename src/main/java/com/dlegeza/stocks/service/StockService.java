@@ -24,8 +24,6 @@ public class StockService {
     /**
      * Gets single page of stocks {@link Stock} from repository
      * @param pageable - {@link Pageable} entity
-
-
      *                supported operations:
      *                  * ":" - translated into equals critera for numeric values; into like criteria for strings
      *                  * ">" - translated into greater criteria

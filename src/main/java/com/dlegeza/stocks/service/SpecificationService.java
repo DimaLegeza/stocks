@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Generic service that creates DB specification {@link Specification}
+ * for DB querying with criterion
+ * @param <T> - class name that corresponds to repository entity class name
+ */
 @Service
 @RequiredArgsConstructor
 public class SpecificationService<T> {

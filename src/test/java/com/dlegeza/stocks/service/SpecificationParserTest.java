@@ -2,7 +2,6 @@ package com.dlegeza.stocks.service;
 
 import static org.junit.Assert.assertEquals;
 
-import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.specification.SearchCriteria;
 
 import java.util.List;
