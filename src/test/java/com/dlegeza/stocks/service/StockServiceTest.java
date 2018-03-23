@@ -31,7 +31,7 @@ public class StockServiceTest {
 	@Before
 	public void setUp() {
 		this.repo = mock(StockRepository.class);
-		StockSpecificationService specService = mock(StockSpecificationService.class);
+		SpecificationService specService = mock(SpecificationService.class);
 		this.specMock = mock(Specification.class);
 		when(specService.parse(anyString())).thenReturn(this.specMock);
 

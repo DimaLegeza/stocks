@@ -2,18 +2,19 @@ package com.dlegeza.stocks.service;
 
 import static org.junit.Assert.assertEquals;
 
+import com.dlegeza.stocks.dto.Stock;
 import com.dlegeza.stocks.specification.SearchCriteria;
 
 import java.util.List;
 
 import org.junit.Test;
 
-public class StockSpecificationServiceTest {
-	private StockSpecificationService service = new StockSpecificationService();
+public class SpecificationParserTest {
+	private SpecificationParser parser = new SpecificationParser();
 
 	@Test
 	public void testSimpleFilter_Success() {
-		List<SearchCriteria> searchCriterions = service.prepareSearchCriterions("name:bla,price>0.1,position:1");
+		List<SearchCriteria> searchCriterions = this.parser.prepareSearchCriterions("name:bla,price>0.1,position:1");
 
 		assertEquals(3, searchCriterions.size());
 		assertEquals("name", searchCriterions.get(0).getKey());

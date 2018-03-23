@@ -19,12 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StockService {
     private final StockRepository stockRepository;
-    private final StockSpecificationService stockSpecificationBuilder;
+    private final SpecificationService<Stock> specificationService;
 
     /**
      * Gets single page of stocks {@link Stock} from repository
      * @param pageable - {@link Pageable} entity
-     * @param searchQ - generic container for search conditions of following structure: <field><operation><value>
+
+
      *                supported operations:
      *                  * ":" - translated into equals critera for numeric values; into like criteria for strings
      *                  * ">" - translated into greater criteria
@@ -35,7 +36,7 @@ public class StockService {
      * @return page of stocks
      */
     public Page<Stock> getStockPage(final Pageable pageable, final String searchQ) {
-        return this.stockRepository.findAll(stockSpecificationBuilder.parse(searchQ), pageable);
+        return this.stockRepository.findAll(this.specificationService.parse(searchQ), pageable);
     }
 
     /**
