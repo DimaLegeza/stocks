@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -28,7 +29,7 @@ public class SpecificationService<T> {
      * @param searchQ - incoming string
      * @return DB specification {@link Specification} entity
      */
-    Specification<T> parse(String searchQ) {
+    Specification<T> parse(@NonNull String searchQ) {
         final List<SearchCriteria> searchCriterions = this.specParser.prepareSearchCriterions(searchQ);
         return this.build(searchCriterions);
     }

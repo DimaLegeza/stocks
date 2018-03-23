@@ -9,12 +9,14 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import lombok.NonNull;
+
 /**
  * Service for transformation of incoming string into search criterions
  */
 @Service
 public class SpecificationParser {
-	private static final String SEARCH_CRITERIA_REGEX = "((\\w+?)(:|<|>)((\\w|\\d|\\.)+?),)+?";
+	private static final String SEARCH_CRITERIA_REGEX = "((\\w+?)(:|<|>)(.+?),)+?";
 	private Pattern pattern = Pattern.compile(SEARCH_CRITERIA_REGEX);
 
 	/**
@@ -22,7 +24,7 @@ public class SpecificationParser {
 	 * @param searchQ - generic container for search conditions of following structure: <field><operation><value>
 	 * @return list of search criterions {@link SearchCriteria}
 	 */
-	List<SearchCriteria> prepareSearchCriterions(String searchQ) {
+	List<SearchCriteria> prepareSearchCriterions(@NonNull String searchQ) {
 		final List<SearchCriteria> searchCriterions = new ArrayList<>();
 		Matcher matcher = this.pattern.matcher(searchQ + ",");
 		while (matcher.find()) {
