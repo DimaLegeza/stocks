@@ -36,8 +36,10 @@ REST back-end was build on top of spring-boot-starter, so following technologies
 
 # Docker
 As production-ready solution, back-end docker image can be build on top of alpine-openjdk8 image
+
 **Building Docker image:**
 ```gradlew clean distDocker```
+
 **Running Docker image:**
 Project has pre-build docker-compose file that will run both back-end and front-end in integrated environment.
 To run with docker-compose:
