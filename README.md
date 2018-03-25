@@ -17,8 +17,8 @@ POST | /stocks | Creates new stock in database
 PUT | /stocks/{id} | Update existing stock in database. [Bad request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400) code will be returned in case stock id could not be found in database 
 
 # Dependencies
-Production environment: JRE 8
-Development environment: JDK 8
+Production environment: Docker
+Development environment: JDK 8, Docker
 
 # Technological stack
 REST back-end was build on top of spring-boot-starter, so following technologies used:
